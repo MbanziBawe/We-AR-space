@@ -4,18 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>Spaceship Demo</title>
+  <title>Colored Sphere Demo</title>
 
   <!-- three.js -->
   <script src="https://unpkg.com/three@0.126.0/build/three.js"></script>
-  <!-- GLTFLoader -->
-  <script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
-<button onclick="activateXR()">Start Spaceship Demo</button>
+<button onclick="activateXR()">Start Colored Sphere Demo</button>
 <script>
 async function activateXR() {
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
@@ -26,16 +24,22 @@ async function activateXR() {
   // Create a scene.
   const scene = new THREE.Scene();
 
-  // Load the spaceship model.
-  const loader = new THREE.GLTFLoader();
-  loader.load('https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf', function (gltf) {
-    const spaceship = gltf.scene;
-    spaceship.position.set(1, 1, 1);
-    spaceship.scale.set(0.5, 0.5, 0.5);  // Adjust the scale as needed
-    scene.add(spaceship);
-  }, undefined, function (error) {
-    console.error(error);
-  });
+  // Define colors for each side of the cube.
+  const materials = [
+    new THREE.MeshBasicMaterial({color: 0xff0000}), // red
+    new THREE.MeshBasicMaterial({color: 0x00ff00}), // green
+    new THREE.MeshBasicMaterial({color: 0x0000ff}), // blue
+    new THREE.MeshBasicMaterial({color: 0xffff00}), // yellow
+    new THREE.MeshBasicMaterial({color: 0xff00ff}), // magenta
+    new THREE.MeshBasicMaterial({color: 0x00ffff})  // cyan
+  ];
+
+  // Create a sphere and apply the materials.
+  const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+  const sphereMaterials = materials.map(material => new THREE.MeshBasicMaterial({ color: material.color }));
+  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterials);
+  sphere.position.set(1, 1, 1);
+  scene.add(sphere);
 
   // Set up the WebGLRenderer, which handles rendering to the session's base layer.
   const renderer = new THREE.WebGLRenderer({
@@ -94,3 +98,4 @@ async function activateXR() {
 </script>
 </body>
 </html>
+
